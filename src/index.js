@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios'
 
-import StorageItem from "./storageitems.js"
+import StorageItem from "./storageitem.js"
 
 
 class App extends React.Component {
@@ -10,10 +10,11 @@ class App extends React.Component {
     super()
 
     this.state = {
+      storages: [],
       name: "",
-      date: [],
-      weight: [],
-      amount: [],
+      date: "",
+      weight: "",
+      amount: "",
     }
   }
 
@@ -36,7 +37,7 @@ class App extends React.Component {
     })
   }
 
-  addStorage = (e) => {
+  handleSubmit = (e) => {
     e.preventDefault()
     axios
       .post("https://hr-foodstorage.herokuapp.com/storage", {
@@ -46,10 +47,11 @@ class App extends React.Component {
         amount: this.state.amount
       })
       .then((res) => {
-        this.setState({
-          storages: [res.data, ...this.state.storages],
-          storage: "",
-        })
+        console.log(res)
+        // this.setState({
+        //   storages: [res.data, ...this.state.storages],
+        //   storage: "",
+        // })
       })
       .catch((err) => console.log("added storage error: ", err))
   }
@@ -64,6 +66,7 @@ class App extends React.Component {
     axios
       .get('https://hr-foodstorage.herokuapp.com/storages')
       .then(res => {
+
         this.setState({
           storages: res.data
         })
@@ -77,13 +80,34 @@ class App extends React.Component {
     return (
       <div className="app">
         <h1>"This is are FamilyStorage"</h1>
-        <form className="add-storage" onSubmit={this.addStorage}>
+        <form className="add-storage" onSubmit={this.handleSubmit}>
           <input
             type="text"
-            placeholder="Add Storage"
-            name="storage"
+            placeholder="Name..."
+            name="name"
             onChange={e => this.handleChange(e)}
-            value={this.state.storage}
+            value={this.state.name}
+          />
+          <input
+            type="text"
+            placeholder="Date..."
+            name="date"
+            onChange={e => this.handleChange(e)}
+            value={this.state.date}
+          />
+          <input
+            type="number"
+            placeholder="amount..."
+            name="amount"
+            onChange={e => this.handleChange(e)}
+            value={this.state.amount}
+          />
+          <input
+            type="number"
+            placeholder="weight..."
+            name="weight"
+            onChange={e => this.handleChange(e)}
+            value={this.state.weight}
           />
         <button type="submit">Add to storage</button>
         </form>
